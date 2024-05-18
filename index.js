@@ -53,6 +53,36 @@ async function run() {
       const result = await productsCollection.findOne(query);
       res.send(result);
     });
+    app.put("/product/:id", async (req, res) => {
+      console.log(req.body);
+      const updatedProduct = req.body;
+      const id = req.params;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          title: updatedProduct.title,
+          color: updatedProduct.color,
+          photoURL: updatedProduct.photoURL,
+          price: updatedProduct.price,
+          discount: updatedProduct.discount,
+          description: updatedProduct.description,
+          topLevelCategory: updatedProduct.topLevelCategory,
+          secondLevelCategory: updatedProduct.secondLevelCategory,
+          thirdLevelCategory: updatedProduct.thirdLevelCategory,
+          quality: updatedProduct.quality,
+          size: updatedProduct.size,
+        },
+      };
+
+      const result = await productsCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+
+      res.send(result);
+    });
 
     app.delete("/product/:id", async (req, res) => {
       const id = req.params;
